@@ -21,20 +21,18 @@ class NetUtility{
   }
 
   getHostRangeByNetworkClass(hostClass) {
+    hostClass = hostClass.toUpperCase();
     let hostRange = []
     switch(hostClass){
 
-      case "a":
       case "A":
         hostRange = this.classAHosts;
         break;
 
-      case "b":
       case "B":
         hostRange = this.classBHosts;
         break;
 
-      case "c":
       case "C":
         hostRange = this.classCHosts;
         break;
@@ -156,17 +154,14 @@ class NetUtility{
 async function run(){
   const net = new NetUtility();
   const aliveHosts = await net.scanNetwork("C");
-  const shouldOpenBrowser = false;
+  const browser = await puppeteer.launch({headless: false});
   aliveHosts.forEach(async host => {
-    let err, isPortOpen = await net.isPortOpen(host, 22);
-    if(isPortOpen && !shouldOpenBrowser){
-      const browser = await puppeteer.launch({headless: false});
-      shouldOpenBrowser = true;
-    }else if(isPortOpen){
-      const page = await browser.newPage();
-      await page.goto(`http://${host}:80`);
-      console.log(`Host ${host} has port 80 open`);
-    }
+    let err, isPortOpen = await net.isPortOpen(host, 80);
+    const page = await browser.newPage();
+    await page.goto(`http://${host}:80`, { waitUntil: 'load', timeout: 0 })
+      .then(res => {})
+      .catch(err => {})
+    console.log(`Host ${host} has port 80 open`);
   })
 }
 
