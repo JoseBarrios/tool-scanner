@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/JoseBarrios/tool-scanner#readme",
   "dependencies": {
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "node-nmap": "^4.0.0",
     "ping": "^0.2.3",
     "portscanner": "^2.2.0",
